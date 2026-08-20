@@ -335,7 +335,7 @@ public static class ThemeManager
                 TabInactiveBottom = Color.FromArgb(20, 20, 28),
                 TabBorder = Color.FromArgb(10, 10, 14),
                 Text = Color.FromArgb(248, 241, 212),
-                ValueText = Color.FromArgb(106, 240, 22),
+                ValueText = Color.FromArgb(240, 240, 240),
                 Muted = Color.FromArgb(225, 217, 192),
 
                 // Controls
@@ -390,13 +390,32 @@ public static class ThemeManager
             ListView = new ListViewTheme
             {
                 ScrollBar = Color.FromArgb(40, 80, 130),
-                ScrollButton = Color.FromArgb(70, 120, 180)
+                ScrollButton = Color.FromArgb(70, 120, 180),
+                Enabled = Color.FromArgb(173, 216, 230),
+                Selected = Color.FromArgb(80, 137, 205),
+                Disabled = Color.FromArgb(120, 120, 120),
+                SelectedDisabled = Color.FromArgb(45, 77, 116),
+                Invalid = Color.Red,
+                Heading = Color.FromArgb(255, 165, 0)
             },
             MenuStrip = new MenuStripTheme
             {
                 ItemSelectedColor = Color.FromArgb(3, 111, 160),
                 AccentColor = Color.Gold,
                 AccentLightColor = Color.WhiteSmoke
+            },
+            SegmentedToggle = new SegmentedToggleTheme
+            {
+                WellTop = Color.FromArgb(7, 31, 53),
+                WellBottom = Color.FromArgb(5, 30, 51),
+                Divider = Color.FromArgb(4, 40, 73),
+                SelectedTop = Color.FromArgb(70, 120, 180),
+                SelectedBottom = Color.FromArgb(25, 60, 110),
+                SelectedBorder = Color.FromArgb(255, 192, 0),
+                SelectedText = Color.White,
+                SelectedTextOutline = Color.Black,
+                UnselectedText = Color.White,
+                UnselectedTextOutline = Color.Black
             },
             PowerSlot = new PowerSlotTheme
             {
@@ -413,6 +432,13 @@ public static class ThemeManager
                 Track = Color.FromArgb(40, 80, 130),
                 Bar = Color.FromArgb(70, 120, 180),
                 Hover = Color.FromArgb(100, 150, 210)
+            },
+            Footer = new FooterTheme
+            {
+                Background = Color.FromArgb(6, 17, 35),
+                SummaryText = Color.WhiteSmoke,
+                TotalSlotsText = Color.WhiteSmoke,
+                SlotsLeftText = Color.FromArgb(115, 255, 110)
             }
         };
         themes.Add(hero.Name, hero);
@@ -455,6 +481,7 @@ public static class ThemeManager
                 TabInactiveBottom = Color.FromArgb(24, 16, 20),
                 TabBorder = Color.FromArgb(12, 8, 10),
                 Text = Color.FromArgb(235, 235, 240),
+                ValueText = Color.FromArgb(235, 235, 240),
                 Muted = Color.FromArgb(185, 190, 200),
 
                 // Controls
@@ -508,7 +535,13 @@ public static class ThemeManager
             ListView = new ListViewTheme
             {
                 ScrollBar = Color.FromArgb(140, 60, 60),
-                ScrollButton = Color.FromArgb(190, 90, 90)
+                ScrollButton = Color.FromArgb(190, 90, 90),
+                Enabled = Color.FromArgb(120, 52, 52),
+                Selected = Color.FromArgb(219, 58, 71),
+                Disabled = Color.FromArgb(120, 120, 120),
+                SelectedDisabled = Color.FromArgb(116, 50, 50),
+                Invalid = Color.Red,
+                Heading = Color.WhiteSmoke
             },
             MenuStrip = new MenuStripTheme
             {
@@ -531,6 +564,13 @@ public static class ThemeManager
                 Track = Color.FromArgb(140, 60, 60),
                 Bar = Color.FromArgb(190, 90, 90),
                 Hover = Color.FromArgb(220, 120, 120)
+            },
+            Footer = new FooterTheme
+            {
+                Background = Color.FromArgb(20, 2, 2),
+                SummaryText = Color.WhiteSmoke,
+                TotalSlotsText = Color.WhiteSmoke,
+                SlotsLeftText = Color.FromArgb(231, 109, 109)
             }
         };
         themes.Add(villain.Name, villain);
@@ -553,7 +593,7 @@ public static class ThemeManager
                 TextOutlineColor = Color.Black,
                 ToggledGradientTop = Color.FromArgb(220, 190, 60),
                 ToggledGradientBottom = Color.FromArgb(120, 100, 20),
-                ToggledBorderColor = Color.FromArgb(0, 255, 255),
+                ToggledBorderColor = Color.FromArgb(240, 240, 230),
                 ToggledTextColor = Color.WhiteSmoke,
                 ToggledTextOutlineColor = Color.Black,
             },
@@ -565,14 +605,15 @@ public static class ThemeManager
                 Accent = Color.FromArgb(232, 196, 72),
 
                 // Header tabs (steel + imperial gold)
-                HeaderTop = Color.FromArgb(30, 44, 68),
-                HeaderBottom = Color.FromArgb(48, 70, 102),
+                HeaderTop = Color.FromArgb(48, 56, 68),
+                HeaderBottom = Color.FromArgb(71, 84, 102),
                 TabActiveTop = Color.FromArgb(196, 160, 60),
                 TabActiveBottom = Color.FromArgb(120, 100, 32),
                 TabInactiveTop = Color.FromArgb(32, 34, 40),
                 TabInactiveBottom = Color.FromArgb(24, 26, 32),
                 TabBorder = Color.FromArgb(12, 12, 10),
                 Text = Color.FromArgb(235, 235, 240),
+                ValueText = Color.FromArgb(235, 235, 240),
                 Muted = Color.FromArgb(185, 190, 200),
 
                 // Controls
@@ -626,13 +667,32 @@ public static class ThemeManager
             ListView = new ListViewTheme
             {
                 ScrollBar = Color.FromArgb(170, 140, 40),
-                ScrollButton = Color.FromArgb(220, 190, 60)
+                ScrollButton = Color.FromArgb(220, 190, 60),
+                Enabled = Color.FromArgb(144, 136, 107),
+                Selected = Color.FromArgb(255, 204, 35),
+                Disabled = Color.FromArgb(79, 79, 71),
+                SelectedDisabled = Color.FromArgb(142, 117, 33),
+                Invalid = Color.Red,
+                Heading = Color.FromArgb(255, 165, 0)
             },
             MenuStrip = new MenuStripTheme
             {
                 ItemSelectedColor = Color.FromArgb(145, 120, 40),
-                AccentColor = Color.FromArgb(0, 255, 255),
-                AccentLightColor = Color.Black
+                AccentColor = Color.FromArgb(220, 190, 60),
+                AccentLightColor = Color.FromArgb(200, 180, 120)
+            },
+            SegmentedToggle = new SegmentedToggleTheme
+            {
+                WellTop = Color.FromArgb(52, 45, 7),
+                WellBottom = Color.FromArgb(51, 44, 5),
+                Divider = Color.FromArgb(82, 65, 4),
+                SelectedTop = Color.FromArgb(220, 190, 60),
+                SelectedBottom = Color.FromArgb(120, 100, 20),
+                SelectedBorder = Color.FromArgb(240, 240, 230),
+                SelectedText = Color.FromArgb(245, 245, 245),
+                SelectedTextOutline = Color.Black,
+                UnselectedText = Color.FromArgb(245, 245, 245),
+                UnselectedTextOutline = Color.Black
             },
             PowerSlot = new PowerSlotTheme
             {
@@ -649,6 +709,13 @@ public static class ThemeManager
                 Track = Color.FromArgb(170, 140, 40),
                 Bar = Color.FromArgb(220, 190, 60),
                 Hover = Color.FromArgb(250, 215, 85)
+            },
+            Footer = new FooterTheme
+            {
+                Background = Color.FromArgb(26, 27, 20),
+                SummaryText = Color.FromArgb(245, 245, 245),
+                TotalSlotsText = Color.FromArgb(245, 245, 245),
+                SlotsLeftText = Color.FromArgb(226, 186, 53)
             }
         };
         themes.Add(loyalist.Name, loyalist);
@@ -671,7 +738,7 @@ public static class ThemeManager
                 TextOutlineColor = Color.Black,
                 ToggledGradientTop = Color.FromArgb(60, 220, 220),
                 ToggledGradientBottom = Color.FromArgb(20, 110, 110),
-                ToggledBorderColor = Color.FromArgb(255, 128, 0),
+                ToggledBorderColor = Color.FromArgb(245, 245, 245),
                 ToggledTextColor = Color.White,
                 ToggledTextOutlineColor = Color.Black,
             },
@@ -691,6 +758,7 @@ public static class ThemeManager
                 TabInactiveBottom = Color.FromArgb(16, 20, 22),
                 TabBorder = Color.FromArgb(10, 12, 12),
                 Text = Color.FromArgb(235, 235, 240),
+                ValueText = Color.FromArgb(235, 235, 240),
                 Muted = Color.FromArgb(185, 190, 200),
 
                 // Controls
@@ -744,13 +812,32 @@ public static class ThemeManager
             ListView = new ListViewTheme
             {
                 ScrollBar = Color.FromArgb(40, 170, 170),
-                ScrollButton = Color.FromArgb(60, 220, 220)
+                ScrollButton = Color.FromArgb(60, 220, 220),
+                Enabled = Color.FromArgb(173, 216, 230),
+                Selected = Color.FromArgb(56, 206, 206),
+                Disabled = Color.FromArgb(140, 140, 140),
+                SelectedDisabled = Color.FromArgb(31, 114, 114),
+                Invalid = Color.Red,
+                Heading = Color.White
             },
             MenuStrip = new MenuStripTheme
             {
                 ItemSelectedColor = Color.FromArgb(40, 140, 140),
-                AccentColor = Color.FromArgb(255, 128, 0),
+                AccentColor = Color.FromArgb(56, 195, 195),
                 AccentLightColor = Color.WhiteSmoke
+            },
+            SegmentedToggle = new SegmentedToggleTheme
+            {
+                WellTop = Color.FromArgb(7, 52, 52),
+                WellBottom = Color.FromArgb(5, 51, 51),
+                Divider = Color.FromArgb(4, 73, 73),
+                SelectedTop = Color.FromArgb(60, 220, 220),
+                SelectedBottom = Color.FromArgb(20, 110, 110),
+                SelectedBorder = Color.WhiteSmoke,
+                SelectedText = Color.White,
+                SelectedTextOutline = Color.Black,
+                UnselectedText = Color.White,
+                UnselectedTextOutline = Color.Black
             },
             PowerSlot = new PowerSlotTheme
             {
@@ -767,6 +854,13 @@ public static class ThemeManager
                 Track = Color.FromArgb(40, 170, 170),
                 Bar = Color.FromArgb(60, 220, 220),
                 Hover = Color.FromArgb(100, 255, 255)
+            },
+            Footer = new FooterTheme
+            {
+                Background = Color.FromArgb(14, 18, 20),
+                SummaryText = Color.WhiteSmoke,
+                TotalSlotsText = Color.WhiteSmoke,
+                SlotsLeftText = Color.FromArgb(67, 244, 244)
             }
         };
         themes.Add(resistance.Name, resistance);
@@ -809,6 +903,7 @@ public static class ThemeManager
                 TabInactiveBottom = Color.FromArgb(18, 20, 18),
                 TabBorder = Color.FromArgb(10, 12, 10),
                 Text = Color.FromArgb(235, 235, 240),
+                ValueText = Color.FromArgb(235, 235, 240),
                 Muted = Color.FromArgb(185, 190, 200),
 
                 // Controls
@@ -862,7 +957,14 @@ public static class ThemeManager
             ListView = new ListViewTheme
             {
                 ScrollBar = Color.FromArgb(140, 140, 140),
-                ScrollButton = Color.FromArgb(192, 192, 192)
+                ScrollButton = Color.FromArgb(192, 192, 192),
+                Enabled = Color.FromArgb(200, 150, 150),
+                Selected = Color.FromArgb(229, 56, 86),
+                Disabled = Color.FromArgb(120, 120, 120),
+                SelectedDisabled = Color.FromArgb(132, 51, 59),
+                Invalid = Color.Red,
+                Heading = Color.White
+
             },
             MenuStrip = new MenuStripTheme
             {
@@ -885,6 +987,13 @@ public static class ThemeManager
                 Track = Color.FromArgb(140, 140, 140),
                 Bar = Color.FromArgb(192, 192, 192),
                 Hover = Color.FromArgb(220, 220, 220)
+            },
+            Footer = new FooterTheme
+            {
+                Background = Color.FromArgb(18, 18, 18),
+                SummaryText = Color.WhiteSmoke,
+                TotalSlotsText = Color.WhiteSmoke,
+                SlotsLeftText = Color.FromArgb(244, 119, 130)
             }
         };
         themes.Add(rogue.Name, rogue);
@@ -927,6 +1036,7 @@ public static class ThemeManager
                 TabInactiveBottom = Color.FromArgb(26, 20, 16),
                 TabBorder = Color.FromArgb(14, 10, 8),
                 Text = Color.FromArgb(235, 235, 240),
+                ValueText = Color.FromArgb(235, 235, 240),
                 Muted = Color.FromArgb(185, 190, 200),
 
                 // Controls
@@ -980,7 +1090,13 @@ public static class ThemeManager
             ListView = new ListViewTheme
             {
                 ScrollBar = Color.FromArgb(160, 100, 40),
-                ScrollButton = Color.FromArgb(205, 127, 50)
+                ScrollButton = Color.FromArgb(205, 127, 50),
+                Enabled = Color.FromArgb(131, 82, 33),
+                Selected = Color.FromArgb(255, 158, 62),
+                Disabled = Color.FromArgb(125, 125, 125),
+                SelectedDisabled = Color.FromArgb(99, 62, 25),
+                Invalid = Color.Red,
+                Heading = Color.FromArgb(255, 182, 47)
             },
             MenuStrip = new MenuStripTheme
             {
@@ -1003,6 +1119,13 @@ public static class ThemeManager
                 Track = Color.FromArgb(160, 100, 40),
                 Bar = Color.FromArgb(205, 127, 50),
                 Hover = Color.FromArgb(220, 150, 60)
+            },
+            Footer = new FooterTheme
+            {
+                Background = Color.FromArgb(18, 14, 12),
+                SummaryText = Color.WhiteSmoke,
+                TotalSlotsText = Color.WhiteSmoke,
+                SlotsLeftText = Color.FromArgb(255, 147, 73)
             }
         };
         themes.Add(vigilante.Name, vigilante);
