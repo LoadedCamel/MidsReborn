@@ -570,6 +570,12 @@
     <Content Include="Themes\ArcaneMatrix.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\CoderInTheDark.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Themes\DeepPurple.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="..\MRBResourceLib\Resources.resx" Link="Resources.resx">
       <Generator>None</Generator>
       <CustomToolNamespace>MRBResourceLib</CustomToolNamespace>

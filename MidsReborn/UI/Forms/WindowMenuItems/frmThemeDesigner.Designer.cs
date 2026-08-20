@@ -38,7 +38,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             chkAutoApply = new CheckBox();
             btnApply = new Button();
             chkTopMostSelf = new CheckBox();
-            label1 = new Label();
             chkTopMostParent = new CheckBox();
             label2 = new Label();
             panel1.SuspendLayout();
@@ -71,7 +70,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             lblThemeName.AutoSize = true;
             lblThemeName.Location = new Point(33, 28);
             lblThemeName.Name = "lblThemeName";
-            lblThemeName.Size = new Size(46, 15);
+            lblThemeName.Size = new Size(47, 15);
             lblThemeName.TabIndex = 0;
             lblThemeName.Text = "Theme:";
             // 
@@ -124,20 +123,11 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             chkTopMostSelf.AutoSize = true;
             chkTopMostSelf.Location = new Point(298, 403);
             chkTopMostSelf.Name = "chkTopMostSelf";
-            chkTopMostSelf.Size = new Size(92, 19);
+            chkTopMostSelf.Size = new Size(93, 19);
             chkTopMostSelf.TabIndex = 5;
             chkTopMostSelf.Text = "This window";
             chkTopMostSelf.UseVisualStyleBackColor = true;
             chkTopMostSelf.CheckedChanged += chkTopMostSelf_CheckedChanged;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(404, 416);
-            label1.Name = "label1";
-            label1.Size = new Size(10, 15);
-            label1.TabIndex = 6;
-            label1.Text = "|";
             // 
             // chkTopMostParent
             // 
@@ -155,7 +145,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             label2.AutoSize = true;
             label2.Location = new Point(225, 416);
             label2.Name = "label2";
-            label2.Size = new Size(59, 15);
+            label2.Size = new Size(60, 15);
             label2.TabIndex = 8;
             label2.Text = "Top Most:";
             // 
@@ -167,7 +157,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             ClientSize = new Size(589, 450);
             Controls.Add(label2);
             Controls.Add(chkTopMostParent);
-            Controls.Add(label1);
             Controls.Add(chkTopMostSelf);
             Controls.Add(btnApply);
             Controls.Add(chkAutoApply);
@@ -199,7 +188,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private CheckBox chkAutoApply;
         private Button btnApply;
         private CheckBox chkTopMostSelf;
-        private Label label1;
         private CheckBox chkTopMostParent;
         private Label label2;
     }

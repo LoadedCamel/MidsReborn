@@ -128,10 +128,11 @@ public partial class frmThemeDesigner : Form
                 new List<ThemeField>
                 {
                     new() { Field = "Background", DisplayName = "Background" },
-                    new() { Field = "Card", DisplayName = "Card" },
+                    new() { Field = "Card", DisplayName = "Card" }, // Card + Background will also be used for character name
                     new() { Field = "Border", DisplayName = "Border" },
                     new() { Field = "Accent", DisplayName = "Accent" },
                     new() { Field = "Text", DisplayName = "Text" },
+                    new() { Field = "ValueText", DisplayName = "Value Text" }, // Will also be used for character name
                     new() { Field = "Muted", DisplayName = "Muted Text" },
 
                     new() { Field = "HeaderTop", DisplayName = "Header: Top" },

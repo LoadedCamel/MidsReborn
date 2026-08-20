@@ -102,7 +102,7 @@
     "TabInactiveBottom": "#FF11001C",
     "TabBorder": "#FF0C0016",
     "Text": "#FFE0E0E0",
-    "ValueText": "#00000000",
+    "ValueText": "#FFE0E0E0",
     "Muted": "#FFB9BEC8",
     "Chip": "#FF2D004D",
     "ChipActive": "#FF4A007D",
