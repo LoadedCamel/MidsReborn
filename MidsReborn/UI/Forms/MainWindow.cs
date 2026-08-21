@@ -6817,12 +6817,15 @@ namespace Mids_Reborn.UI.Forms
 
             _themeMenu.DropDownItems.Clear();
 
-
             var themes = ThemeManager.AvailableThemes.OrderBy(t => t.IsUser)
                 .ThenBy(t => t.Name)
                 .ToList();
 
-            var active = ThemeManager.CurrentTheme?.Name;
+            // Bug: Active theme detection may fail through ThemeManager
+            // Use Config as fallback
+            var active = string.IsNullOrEmpty(ThemeManager.CurrentTheme?.Name)
+                ? MidsContext.Config?.SelectedTheme
+                : ThemeManager.CurrentTheme?.Name;
 
             foreach (var theme in themes)
             {
@@ -6832,6 +6835,7 @@ namespace Mids_Reborn.UI.Forms
                     Tag = theme.Name,
                     Checked = string.Equals(theme.Name, active, StringComparison.OrdinalIgnoreCase)
                 };
+
                 item.Click += (_, __) =>
                 {
                     ThemeManager.SetTheme((string)item.Tag!);
@@ -6840,6 +6844,7 @@ namespace Mids_Reborn.UI.Forms
                     // Properties.Settings.Default.LastThemeName = (string)item.Tag!;
                     // Properties.Settings.Default.Save();
                 };
+
                 _themeMenu.DropDownItems.Add(item);
             }
 

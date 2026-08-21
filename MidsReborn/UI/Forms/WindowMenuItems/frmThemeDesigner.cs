@@ -139,6 +139,9 @@ public partial class frmThemeDesigner : Form
                     new() { Field = "HeaderBottom", DisplayName = "Header: Bottom" },
                     new() { Field = "TabActiveTop", DisplayName = "Active Tab: Top" },
                     new() { Field = "TabActiveBottom", DisplayName = "Active Tab: Bottom" },
+                    new() { Field = "TabInactiveTop", DisplayName = "Inactive Tab: Top" },
+                    new() { Field = "TabInactiveBottom", DisplayName = "Inactive Tab: Bottom" },
+
                     new() { Field = "TabBorder", DisplayName = "Tab: Border" },
 
                     new() { Field = "Chip", DisplayName = "Chip" },
@@ -155,6 +158,9 @@ public partial class frmThemeDesigner : Form
                     new() { Field = "GridRowEven", DisplayName = "Grid: Row (Even)" },
                     new() { Field = "GridRowOdd", DisplayName = "Grid: Row (Odd)" },
                     new() { Field = "GridRowLine", DisplayName = "Grid: Row Line" },
+                    new() { Field = "GridBandLow", DisplayName = "Grid: Band (Low)" }, //   Used in Rogue
+                    new() { Field = "GridBandMid", DisplayName = "Grid: Band (Low)" }, //   Used in Rogue
+                    new() { Field = "GridBandHigh", DisplayName = "Grid: Band (High)" }, // Used in Rogue
                     new() { Field = "GridGood", DisplayName = "Grid: Good" }, // In Arcane Matrix theme but not in ApplicationTheme classes
                     new() { Field = "GridBad", DisplayName = "Grid: Bad" }, //   In Arcane Matrix theme but not in ApplicationTheme classes
                     new() { Field = "GridNeutral", DisplayName = "Grid: Neutral" }
@@ -279,6 +285,15 @@ public partial class frmThemeDesigner : Form
             // Got to look for default values because group
             // is nullable in theme and may be missing.
             // We want the default colors that match what is seen.            
+            "DataView" => field switch
+            {
+                "TabInactiveTop" => Color.FromArgb(28, 28, 36),
+                "TabInactiveBottom" => Color.FromArgb(20, 20, 28),
+                "GridBandLow" => Color.FromArgb(96, 212, 120),
+                "GridBandMid" => Color.FromArgb(144, 173, 28),
+                "GridBandHigh" => Color.FromArgb(230, 86, 86),
+                _ => Color.Black
+            },
             "Footer" => field switch
             {
                 "Background" => Color.FromArgb(6, 17, 35),
