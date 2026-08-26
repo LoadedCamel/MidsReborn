@@ -3378,7 +3378,7 @@ namespace Mids_Reborn.Core
                     var strArray = FileIO.IOGrab(streamReader);
                     for (var index2 = 0; index2 < 4; ++index2)
                     {
-                        var ret = float.TryParse(strArray[index2 + 1], out Database.MultED[index2][index1]);
+                        var ret = TryParseMathValue(strArray[index2 + 1], out Database.MultED[index2][index1]);
                         if (ret)
                         {
                             continue;
@@ -3400,7 +3400,7 @@ namespace Mids_Reborn.Core
                 var strArray1 = FileIO.IOGrab(streamReader);
                 for (var index = 0; index < 4; ++index)
                 {
-                    var ret = float.TryParse(strArray1[index + 1], out Database.MultTO[0][index]);
+                    var ret = TryParseMathValue(strArray1[index + 1], out Database.MultTO[0][index]);
                     if (ret)
                     {
                         continue;
@@ -3412,7 +3412,7 @@ namespace Mids_Reborn.Core
                 var strArray2 = FileIO.IOGrab(streamReader);
                 for (var index = 0; index < 4; ++index)
                 {
-                    var ret = float.TryParse(strArray2[index + 1], out Database.MultDO[0][index]);
+                    var ret = TryParseMathValue(strArray2[index + 1], out Database.MultDO[0][index]);
                     if (ret)
                     {
                         continue;
@@ -3424,7 +3424,7 @@ namespace Mids_Reborn.Core
                 var strArray3 = FileIO.IOGrab(streamReader);
                 for (var index = 0; index < 4; ++index)
                 {
-                    var ret = float.TryParse(strArray3[index + 1], out Database.MultSO[0][index]);
+                    var ret = TryParseMathValue(strArray3[index + 1], out Database.MultSO[0][index]);
                     if (ret)
                     {
                         continue;
@@ -3436,7 +3436,7 @@ namespace Mids_Reborn.Core
                 var strArray4 = FileIO.IOGrab(streamReader);
                 for (var index = 0; index < 4; ++index)
                 {
-                    var ret = float.TryParse(strArray4[index + 1], out Database.MultHO[0][index]);
+                    var ret = TryParseMathValue(strArray4[index + 1], out Database.MultHO[0][index]);
                     if (ret)
                     {
                         continue;
@@ -3459,7 +3459,7 @@ namespace Mids_Reborn.Core
                     var strArray5 = FileIO.IOGrab(streamReader);
                     for (var index2 = 0; index2 < 4; ++index2)
                     {
-                        var ret = float.TryParse(strArray5[index2 + 1], out Database.MultIO[index1][index2]);
+                        var ret = TryParseMathValue(strArray5[index2 + 1], out Database.MultIO[index1][index2]);
                         if (ret)
                         {
                             continue;
@@ -3504,6 +3504,9 @@ namespace Mids_Reborn.Core
 
             return false;
         }
+
+        private static bool TryParseMathValue(string value, out float result) =>
+            float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out result);
 
         public static void AssignSetBonusIndexes()
         {
