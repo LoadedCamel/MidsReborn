@@ -258,6 +258,7 @@ Contributions, feedback, and issue reports are welcome and help guide ongoing im
 ## Credits
 
 Thanks to everyone who has contributed to Mids Reborn through testing, bug reports, etc.
+
 Special thanks to our friends at Caphyon for providing us an open source license for Advanced Installer.
 
 [View repository contributors](https://github.com/LoadedCamel/MidsReborn/graphs/contributors)
